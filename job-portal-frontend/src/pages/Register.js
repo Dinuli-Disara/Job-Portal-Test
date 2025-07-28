@@ -11,6 +11,7 @@ const Register = () => {
     role: 'job_seeker'
   });
   const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,11 +22,16 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
+    setSuccessMessage('');
     
     try {
-      const res = await axios.post('/auth', formData);
+      const res = await axios.post('http://localhost:5000/api/auth/register', formData);
       console.log('Registration success:', res.data);
-      navigate('/dashboard');
+      
+      setSuccessMessage('Registration successful! Redirecting to login...');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2500); // Redirect after 2.5 seconds
     } catch (err) {
       console.error('Registration error:', err.response?.data);
       setErrors({
@@ -41,6 +47,12 @@ const Register = () => {
       <div className="register-card">
         <h2>Create Your Account</h2>
         
+        {/* Success Message */}
+        {successMessage && (
+          <div className="success-message">{successMessage}</div> 
+        )}
+
+        {/* Error Message */}
         {errors.message && (
           <div className="error-message">{errors.message}</div>
         )}

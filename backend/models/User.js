@@ -1,5 +1,6 @@
 // models/User.js
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,17 +19,23 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [6, 'Password must be at least 6 characters']
+    minlength: [6, 'Password must be at least 6 characters'],
+    validate: {
+      validator: function(v) {
+        return /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/.test(v);
+      },
+      message: 'Password must contain at least one uppercase letter,and one special character'
+    }
   },
   role: {
     type: String,
-    enum: ['employer', 'jobseeker'],
+    enum: ['job_seeker', 'recruiter'],
     required: true
   },
   company: {
     type: String,
     trim: true,
-    required: function() { return this.role === 'employer'; }
+    required: function() { return this.role === 'recruiter'; }
   },
   skills: {
     type: [String],
@@ -48,14 +55,19 @@ const userSchema = new mongoose.Schema({
       year: String
     }]
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now
+}, { timestamps: true });
+
+// Hash password before saving
+userSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
   }
+  next();
 });
+
+// Method to compare passwords
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+}
 
 module.exports = mongoose.model('User', userSchema);

@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const errorHandler = require('../utils/errorHandler');
 
 exports.register = async (req, res) => {
@@ -16,7 +17,7 @@ exports.register = async (req, res) => {
     const user = await User.create({
       email,
       password,
-      profile: { name },
+      name,
       role: role || 'job_seeker'
     });
 

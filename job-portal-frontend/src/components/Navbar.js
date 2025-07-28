@@ -40,20 +40,7 @@ const Navbar = () => {
           {!isLoggedIn ? (
             <NavLink to="/login" className="auth-btn login-btn">SIGN IN / SIGN UP</NavLink>
           ) : (
-            <>
-              <NavLink to="/profile" className="auth-btn profile-btn">Profile</NavLink>
-              <button 
-                className="auth-btn logout-btn" 
-                onClick={() => {
-                  localStorage.removeItem('user');
-                  setIsLoggedIn(false);
-                  setUserRole('');
-                  navigate('/');
-                }}
-              >
-                Logout  
-              </button>
-            </>
+            <NavLink to="/profile" className="auth-btn profile-btn">Profile</NavLink>
           )}
         </div>
       </div>

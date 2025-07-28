@@ -5,6 +5,7 @@
   align-items: center;
   min-height: 100vh;
   background-color: #f5f5f5;
+  padding: 1rem;
 }
 
 .register-card,.login-card {
@@ -16,6 +17,16 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.success-message {
+  color: #2ecc71;
+  padding: 10px;
+  margin-bottom: 1rem;
+  background-color: #eafaf1;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+
 .error-message {
   color: #e74c3c;
   padding: 10px;
@@ -23,10 +34,12 @@
   background-color: #fdecea;
   border-radius: 4px;
   text-align: center;
+  width: 100%;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
+  margin-right: 1.5rem;
 }
 
 .form-group input {
@@ -34,7 +47,18 @@
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 16px; 
+}
+
+/* Focus styles for accessibility */
+input:focus, button:focus {
+  outline: 2px solid #1B3C53;
+  outline-offset: 2px;
+}
+
+/* Placeholder styles */
+input::placeholder {
+  color: #888;
 }
 
 .role-selection {
@@ -54,6 +78,8 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .role-options label.active {
@@ -75,6 +101,11 @@
   border-radius: 4px;
   font-size: 16px;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.register-button:hover, .login-button:hover {
+  background-color: #163142;
 }
 
 .login-link {
@@ -86,4 +117,28 @@
 .login-link a {
   color: #1B3C53;
   text-decoration: none;
+}
+
+/* Password rules hint (optional) */
+.password-hint {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+}
+
+/* Responsive styling */
+@media (max-width: 480px) {
+  .register-card, .login-card {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+
+  .role-options {
+    flex-direction: column;
+  }
+
+  .role-options label {
+    width: 100%;
+  }
 }

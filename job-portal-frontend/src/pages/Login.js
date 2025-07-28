@@ -22,14 +22,15 @@ const Login = () => {
     setErrors({});
     
     try {
-      const res = await axios.post('/api/auth', {
-        email: formData.email,
+      const res = await axios.post('/api/auth/login', {
+        email: formData.email.trim(),
         password: formData.password,
         role: formData.role
       });
       
       localStorage.setItem('token', res.data.token);
-      navigate(`/${formData.role}/dashboard`);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
+      navigate(`/${res.data.user.role}/dashboard`);
     } catch (err) {
       setErrors({
         message: err.response?.data?.message || 'Login failed. Please try again.'

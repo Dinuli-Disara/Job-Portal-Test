@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route,} from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import JobList from './pages/JobList';
 import Postjob from './pages/Postjob';
 import Navbar from './components/Navbar';
+import Unauthorized from './pages/Unauthorized';
 
 function App() {
   return (
@@ -18,7 +19,15 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/jobs" element={<JobList />} />
-        <Route path="/post-job" element={<Postjob />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
+        
+        {/* Protected Routes */}
+        
+        <Route path="/post-job" element={
+          <ProtectedRoute allowedRoles={['recriter']}>
+            <Postjob />
+          </ProtectedRoute>
+        } />
         
         <Route path="/job-seeker/dashboard" element={
           <ProtectedRoute allowedRoles={['job_seeker']}>

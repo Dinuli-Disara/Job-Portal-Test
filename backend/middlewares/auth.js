@@ -10,6 +10,7 @@ exports.authenticate = async (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    errorHandler(res, 401, 'Please authenticate');
+    console.error('JWT Auth Error:', err.message);
+    errorHandler(res, 401, 'Invalid or expired token');
   }
 };
