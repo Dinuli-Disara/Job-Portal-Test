@@ -5,12 +5,13 @@ import { useNavigate } from 'react-router-dom';
 const JobForm = ({ onSubmit }) => {
   const [formData, setFormData] = useState({
     title: '',
+    company: '',
     description: '',
     requirements: '',
     jobType: 'Full-time',
     location: '',
-    minSalary: '',
-    maxSalary: ''
+    salary: '',
+    contactEmail: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -19,10 +20,13 @@ const JobForm = ({ onSubmit }) => {
   const validate = () => {
     const newErrors = {};
     if (!formData.title) newErrors.title = 'Title is required';
+    if (!formData.company) newErrors.company = 'Company name is required';
     if (!formData.description) newErrors.description = 'Description is required';
+    if (!formData.requirements) newErrors.requirements = 'Requirements are required';
     if (!formData.location) newErrors.location = 'Location is required';
-    if (formData.minSalary && isNaN(formData.minSalary)) newErrors.minSalary = 'Must be a number';
-    if (formData.maxSalary && isNaN(formData.maxSalary)) newErrors.maxSalary = 'Must be a number';
+    if (!formData.contactEmail) newErrors.contactEmail = 'Contact email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.contactEmail)) newErrors.contactEmail = 'Invalid email format';
+    if (formData.salary && isNaN(formData.salary)) newErrors.salary = 'Must be a number';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -33,13 +37,16 @@ const JobForm = ({ onSubmit }) => {
     
     try {
       await api.post('/jobs', {
-        ...formData,
-        requirements: formData.requirements.split('\n').filter(r => r.trim()),
-        salaryRange: {
-          min: formData.minSalary || undefined,
-          max: formData.maxSalary || undefined
-        }
+        title: formData.title,
+        company: formData.company,
+        description: formData.description,
+        requirements: formData.requirements,
+        jobType: formData.jobType,
+        location: formData.location,
+        salary: formData.salary ? parseFloat(formData.salary) : undefined,
+        contactEmail: formData.contactEmail
       });
+
       onSubmit();
       navigate('/jobs'); // Redirect after successful submission
     } catch (err) {
@@ -68,6 +75,17 @@ const JobForm = ({ onSubmit }) => {
       </div>
 
       <div className="form-group">
+        <label>Company Name*</label>
+        <input
+          name="company"
+          value={formData.company}
+          onChange={handleChange}
+          className={errors.company ? 'error' : ''}
+        />
+        {errors.company && <span className="error-message">{errors.company}</span>}
+      </div>
+
+      <div className="form-group">
         <label>Description*</label>
         <textarea
           name="description"
@@ -86,8 +104,9 @@ const JobForm = ({ onSubmit }) => {
           value={formData.requirements}
           onChange={handleChange}
           rows={5}
-          placeholder="Enter each requirement on a new line"
+          className={errors.requirements ? 'error' : ''}
         />
+        {errors.requirements && <span className="error-message">{errors.requirements}</span>}
       </div>
 
       <div className="form-row">
@@ -116,37 +135,35 @@ const JobForm = ({ onSubmit }) => {
           />
           {errors.location && <span className="error-message">{errors.location}</span>}
         </div>
+
+      <div className="form-group">
+        <label>Salary ($)</label>
+        <input
+          type="number"
+          name="salary"
+          value={formData.salary}
+          onChange={handleChange}
+          className={errors.salary ? 'error' : ''}
+        />
+        {errors.salary && <span className="error-message">{errors.salary}</span>}
+      </div>
       </div>
 
-      <div className="form-row">
-        <div className="form-group">
-          <label>Min Salary ($)</label>
-          <input
-            type="number"
-            name="minSalary"
-            value={formData.minSalary}
-            onChange={handleChange}
-            className={errors.minSalary ? 'error' : ''}
-          />
-          {errors.minSalary && <span className="error-message">{errors.minSalary}</span>}
-        </div>
-
-        <div className="form-group">
-          <label>Max Salary ($)</label>
-          <input
-            type="number"
-            name="maxSalary"
-            value={formData.maxSalary}
-            onChange={handleChange}
-            className={errors.maxSalary ? 'error' : ''}
-          />
-          {errors.maxSalary && <span className="error-message">{errors.maxSalary}</span>}
-        </div>
+      <div className="form-group">
+        <label>Contact Email*</label>
+        <input
+          type="email"
+          name="contactEmail"
+          value={formData.contactEmail}
+          onChange={handleChange}
+          className={errors.contactEmail ? 'error' : ''}
+        />
+        {errors.contactEmail && <span className="error-message">{errors.contactEmail}</span>}
       </div>
 
       <button type="submit" className="submit-btn">Post Job</button>
-    </form>
-  );
+  </form>
+);
 };
 
 export default JobForm;

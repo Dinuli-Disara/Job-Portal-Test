@@ -8,7 +8,8 @@ const Register = () => {
     name: '',
     email: '',
     password: '',
-    role: 'job_seeker'
+    role: 'job_seeker',
+    company: '' // Only for recruiters
   });
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
@@ -88,9 +89,22 @@ const Register = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              minLength="8"
+              minLength="6"
             />
           </div>
+
+          {formData.role === 'recruiter' && (
+            <div className="form-group">
+              <input
+                type="text"
+                name="company"
+                placeholder="Company Name"
+                value={formData.company}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
 
           <div className="role-selection">
             <p>Register As</p>

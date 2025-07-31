@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import JobCard from '../components/JobCard';
 import api from '../api';
-import './styles/joblist.css'; // ✅ Add this line to link your new CSS
+import './styles/joblist.css'; 
 
 const JobList = () => {
   const [jobs, setJobs] = useState([]);
@@ -10,7 +10,7 @@ const JobList = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await api.get('/api/jobs');
+        const response = await api.get('/jobs');
         setJobs(response.data);
         setLoading(false);
       } catch (err) {

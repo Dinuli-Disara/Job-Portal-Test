@@ -1,21 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Import Link component
-
 import './styles/Home.css';
 
 const Home = () => {
   return (
     <div className="home-page">
       
-      
       <main className="home-content">
         <section className="hero-section">
-          <h1>Give your Career a Jumpstart</h1>
+          <h1>Find Your Dream Job Today</h1>
           <p>
-            JobWell is Sri Lanka's premier Job Board. A marketplace tasked to help companies hire the best talent.
-            JobWell is already trusted by over 8500 Sri Lankan and global organizations, and has a proven track
-            record of utilizing recruitment technology with a Sri Lankan touch. JobWell has now processed over
-            6 million job applications.
+            Explore thousands of opportunities from top companies around the world.          
           </p>
           
           {/* Registration Buttons */}

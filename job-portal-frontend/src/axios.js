@@ -7,4 +7,13 @@ const instance = axios.create({
   },
 });
 
+// Automatically add the token to requests
+instance.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem('token');
+  if (token) {
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export default instance;

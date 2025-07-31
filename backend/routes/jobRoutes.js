@@ -1,8 +1,7 @@
-// routes/jobs.js
 const express = require('express');
 const router = express.Router();
 const Job = require('../models/Job');
-const { protect } = require('../middleware/auth');
+const protect = require('../middlewares/auth');
 
 // @desc    Create a new job
 // @route   POST /api/jobs
@@ -33,6 +32,17 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Add more routes as needed (get single job, update, delete, etc.)
+// @desc    Get jobs posted by the logged-in recruiter
+// @route   GET /api/jobs/my-jobs
+// @access  Private
+router.get('/my-jobs', protect, async (req, res) => {
+  try {
+    const jobs = await Job.find({ postedBy: req.user.id }).sort('-createdAt');
+    res.json(jobs);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch your jobs' });
+  }
+});
+
 
 module.exports = router;

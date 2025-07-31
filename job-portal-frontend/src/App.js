@@ -6,7 +6,7 @@ import DashboardJobSeeker from './pages/DashboardJobSeeker';
 import DashboardRecruiter from './pages/DashboardRecruiter';
 import Home from './pages/Home';
 import JobList from './pages/JobList';
-import Postjob from './pages/Postjob';
+import PostJob from './pages/Postjob';
 import Navbar from './components/Navbar';
 import Unauthorized from './pages/Unauthorized';
 
@@ -25,11 +25,11 @@ function App() {
         
         <Route path="/post-job" element={
           <ProtectedRoute allowedRoles={['recriter']}>
-            <Postjob />
+            <PostJob />
           </ProtectedRoute>
         } />
         
-        <Route path="/job-seeker/dashboard" element={
+        <Route path="/job_seeker/dashboard" element={
           <ProtectedRoute allowedRoles={['job_seeker']}>
             <DashboardJobSeeker />
           </ProtectedRoute>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
+import JobForm from '../components/JobForm';
 import './styles/DashboardRecruiter.css';
 
 const DashboardRecruiter = () => {
@@ -10,69 +11,29 @@ const DashboardRecruiter = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  // Form state
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    requirements: '',
-    jobType: 'Full-time',
-    location: '',
-    minSalary: '',
-    maxSalary: ''
-  });
-
   // Fetch jobs on component mount
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await api.get('/jobs/my-jobs');
         setJobs(response.data);
-        setLoading(false);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to load jobs');
+      } finally {
         setLoading(false);
       }
     };
     fetchJobs();
   }, []);
 
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+  // Handle input changes in the job form
+  const handleJobPosted = async () => {
+    const response = await api.get('/jobs/my-jobs');
+    setJobs(response.data);
+    setShowForm(false);
   };
 
-  // Submit new job
-  const handleSubmitJob = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await api.post('/jobs', {
-        ...formData,
-        requirements: formData.requirements.split('\n').filter(r => r.trim()),
-        salaryRange: {
-          min: formData.minSalary || undefined,
-          max: formData.maxSalary || undefined
-        }
-      });
-      setJobs([...jobs, response.data]);
-      setShowForm(false);
-      setFormData({
-        title: '',
-        description: '',
-        requirements: '',
-        jobType: 'Full-time',
-        location: '',
-        minSalary: '',
-        maxSalary: ''
-      });
-    } catch (err) {
-      setError(err.response?.data?.message || 'Failed to post job');
-    }
-  };
-
-  if (loading) return <div className="loading">Loading your job postings...</div>;
+  if (loading) return <div className="loading">Loading your job posting...</div>
   if (error) return <div className="error">{error}</div>;
 
   return (
@@ -88,94 +49,10 @@ const DashboardRecruiter = () => {
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmitJob} className="job-form">
+        <div className="job-form">
           <h2>Create New Job Posting</h2>
-          
-          <div className="form-group">
-            <label>Job Title*</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Description*</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows={5}
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Requirements (one per line)*</label>
-            <textarea
-              name="requirements"
-              value={formData.requirements}
-              onChange={handleInputChange}
-              rows={5}
-              required
-            />
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Job Type*</label>
-              <select
-                name="jobType"
-                value={formData.jobType}
-                onChange={handleInputChange}
-              >
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
-                <option value="Internship">Internship</option>
-                <option value="Remote">Remote</option>
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Location*</label>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="form-row">
-            <div className="form-group">
-              <label>Min Salary ($)</label>
-              <input
-                type="number"
-                name="minSalary"
-                value={formData.minSalary}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Max Salary ($)</label>
-              <input
-                type="number"
-                name="maxSalary"
-                value={formData.maxSalary}
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
-
-          <button type="submit" className="submit-btn">Post Job</button>
-        </form>
+          <JobForm onSubmit={handleJobPosted} />
+        </div>
       )}
 
       <div className="jobs-list">
@@ -194,7 +71,7 @@ const DashboardRecruiter = () => {
             <div key={job._id} className="job-card">
               <div className="job-header">
                 <h3>{job.title}</h3>
-                <span className={`job-type ${job.jobType.toLowerCase()}`}>
+                <span className={`job-type ${job.jobType?.toLowerCase()}`}>
                   {job.jobType}
                 </span>
               </div>

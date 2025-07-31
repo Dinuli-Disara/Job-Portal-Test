@@ -7,7 +7,7 @@ const User = require('../models/User');
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, company } = req.body;
 
     if (!name || !email || !password || !role) {
       return res.status(400).json({ message: 'All fields are required' });
@@ -25,6 +25,7 @@ router.post('/register', async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      company: role === 'recruiter' ? company : undefined
     });
 
     await user.save();

@@ -7,14 +7,39 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState('');
 
-  useEffect(() => {
-    // Check if user is logged in and retrieve user role from localStorage
-    const user = JSON.parse(localStorage.getItem('user'));
+  const updateUserState = () => {
+    const user = JSON.parse(sessionStorage.getItem('user'));
     if (user) {
       setIsLoggedIn(true);
-      setUserRole(user.role);
+      setUserRole(user.role); 
+    } else {
+      setIsLoggedIn(false);
+      setUserRole('');
     }
+  };
+
+  useEffect(() => {
+    updateUserState();
+
+    // Listen for login events accross the application
+    window.addEventListener('storage', updateUserState);
+    window.addEventListener('login', updateUserState);
+
+    return () => {
+      // Cleanup event listeners
+      window.removeEventListener('storage', updateUserState);
+      window.removeEventListener('login', updateUserState);
+    };
   }, []);
+
+   const handleProfileClick = () => {
+    if (userRole === 'recruiter') {
+      navigate('/recruiter/dashboard');
+    } else if (userRole === 'job_seeker') {
+      navigate('/job_seeker/dashboard');
+    }
+  };
+
 
   return (
     <header className="navbar">
@@ -40,7 +65,9 @@ const Navbar = () => {
           {!isLoggedIn ? (
             <NavLink to="/login" className="auth-btn login-btn">SIGN IN / SIGN UP</NavLink>
           ) : (
-            <NavLink to="/profile" className="auth-btn profile-btn">Profile</NavLink>
+            <button className="auth-btn profile-btn" onClick={handleProfileClick}>
+              profile
+              </button>
           )}
         </div>
       </div>

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const errorHandler = require('../utils/errorHandler');
 
-exports.authenticate = async (req, res, next) => {
+const protect = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) throw new Error('Authentication required');
@@ -14,3 +14,5 @@ exports.authenticate = async (req, res, next) => {
     errorHandler(res, 401, 'Invalid or expired token');
   }
 };
+
+module.exports = protect;

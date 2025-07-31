@@ -28,8 +28,13 @@ const Login = () => {
         role: formData.role
       });
       
-      localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user));
+      sessionStorage.setItem('token', res.data.token);
+      sessionStorage.setItem('user', JSON.stringify(res.data.user));
+
+      //notify other components of login
+      window.dispatchEvent(new Event('storage'));
+
+
       navigate(`/${res.data.user.role}/dashboard`);
     } catch (err) {
       setErrors({

@@ -5,20 +5,44 @@ const errorHandler = require('../utils/errorHandler');
 
 exports.register = async (req, res) => {
   try {
-    const { email, password, name, role } = req.body;
+    const { email, password, name, role, company } = req.body;
     
+    // Validate company email for recruiters
+    if (role === 'recruiter') {
+      const freeEmailDomains = ['gmail.com', 'yahoo.com', 'hotmail.com'];
+      const emailDomain = email.split('@')[1];
+
+      if (!company) {
+        return errorHandler(res, 400, 'Company name is required for recruiters');
+      }
+
+      if (!domain || freeEmailDomains.includes(domain)) {
+        return errorHandler(res, 400, 'Recruiters must use a company email address');
+      }
+    }
+
     // Check if user exists
     const exists = await User.findOne({ email });
     if (exists) {
       return errorHandler(res, 400, 'Email already registered');
     }
 
+    // Validate password strength
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+    if (!passwordRegex.test(password)) {
+      return errorHandler(res, 400, 'Password must be at least 6 characters long and contain at least one uppercase letter and one special character');
+    }
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create user (password validation happens automatically via model)
     const user = await User.create({
       email,
       password,
       name,
-      role: role || 'job_seeker'
+      role: role || 'job_seeker',
+      company: role === 'recruiter' ? company : undefined // Only include company if recruiter
     });
 
     // Generate JWT

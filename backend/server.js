@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
+const jobRoutes = require('./routes/jobRoutes');
 
 const app = express();
 
@@ -10,13 +11,14 @@ const app = express();
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   methods: ['GET', 'POST', 'OPTIONS'], // Allowed methods
-  allowedHeaders: ['Content-Type'], // Allowed headers
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
   credentials: true
 }));
 app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
