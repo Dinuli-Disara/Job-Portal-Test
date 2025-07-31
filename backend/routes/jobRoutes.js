@@ -44,5 +44,19 @@ router.get('/my-jobs', protect, async (req, res) => {
   }
 });
 
+// @desc    Get job by ID
+// @route   GET /api/jobs/:id
+// @access  Public
+router.get('/:id', async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id).populate('postedBy', 'name company');
+    if (!job) return res.status(404).json({ message: 'Job not found' });
+    res.json(job);
+  } catch (err) {
+    console.error('Error fetching job:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 module.exports = router;

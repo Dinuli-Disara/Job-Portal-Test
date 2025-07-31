@@ -18,7 +18,7 @@ const jobSchema = new mongoose.Schema({
     trim: true
   },
   salary: {
-    type: String,
+    type: Number,
     trim: true
   },
   description: {

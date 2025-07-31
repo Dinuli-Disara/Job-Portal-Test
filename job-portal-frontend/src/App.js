@@ -9,6 +9,8 @@ import JobList from './pages/JobList';
 import PostJob from './pages/Postjob';
 import Navbar from './components/Navbar';
 import Unauthorized from './pages/Unauthorized';
+import JobDetails from './pages/JobDetails';
+import ApplicationForm from './components/ApplicationForm';
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/jobs" element={<JobList />} />
+        <Route path="/jobs/:id" element={<JobDetails />} />
+        <Route path="/jobs/:id/apply" element={<ApplicationForm />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
         
         {/* Protected Routes */}

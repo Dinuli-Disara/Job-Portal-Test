@@ -8,7 +8,7 @@ const JobForm = ({ onSubmit }) => {
     company: '',
     description: '',
     requirements: '',
-    jobType: 'Full-time',
+    type: 'Full-time',
     location: '',
     salary: '',
     contactEmail: ''
@@ -41,7 +41,7 @@ const JobForm = ({ onSubmit }) => {
         company: formData.company,
         description: formData.description,
         requirements: formData.requirements,
-        jobType: formData.jobType,
+        jobType: formData.type,
         location: formData.location,
         salary: formData.salary ? parseFloat(formData.salary) : undefined,
         contactEmail: formData.contactEmail
@@ -113,7 +113,7 @@ const JobForm = ({ onSubmit }) => {
         <div className="form-group">
           <label>Job Type*</label>
           <select
-            name="jobType"
+            name="type"
             value={formData.jobType}
             onChange={handleChange}
           >

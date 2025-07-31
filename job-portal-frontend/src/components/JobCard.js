@@ -6,8 +6,8 @@ const JobCard = ({ job }) => {
     <div className="job-card">
       <h3>{job.title}</h3>
       <p>{job.company} • {job.location}</p>
-      <p>Salary: ${job.salary?.toLocaleString()}</p>
-      <p>Type: {job.jobType}</p>
+      <p>Salary: ${job.salary? job.salary.toLocaleString() : 'Not specified'}</p>
+      <p>Type: {job.type}</p>
       <Link to={`/jobs/${job._id}`}>View Details</Link>
     </div>
   );
